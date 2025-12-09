@@ -18,10 +18,6 @@ export class NotesService {
     return this.noteModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} note`;
-  }
-
   update(id: number, updateNoteDto: UpdateNoteDto) {
     return `This action updates a #${id} note`;
   }

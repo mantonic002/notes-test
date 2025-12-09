@@ -9,7 +9,7 @@ export class Note {
   note: string;
 
   @Prop()
-  user_id?: string;
+  userId?: string;
 
   @Prop()
   group?: string;
