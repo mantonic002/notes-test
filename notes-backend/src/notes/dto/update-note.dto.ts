@@ -1,7 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateNoteDto } from './create-note.dto';
-
-export class UpdateNoteDto extends PartialType(CreateNoteDto) {
-    note?: string;
-    group?: string;
+export class UpdateNoteDto {
+  note?: string;
+  group?: string;
 }

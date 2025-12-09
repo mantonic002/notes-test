@@ -12,6 +12,8 @@ import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { User } from 'src/decorators/user.decorator';
+import { Types } from 'mongoose';
 
 @Controller('notes')
 export class NotesController {
@@ -19,25 +21,35 @@ export class NotesController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Body() createNoteDto: CreateNoteDto) {
+  create(@User('sub') userId: string, @Body() createNoteDto: CreateNoteDto) {
+    createNoteDto.userId = new Types.ObjectId(userId);
     return this.notesService.create(createNoteDto);
   }
 
   @Get()
   @UseGuards(AuthGuard)
-  findAll() {
-    return this.notesService.findAll();
+  findAll(@User('sub') userId: string) {
+    const userObjId = new Types.ObjectId(userId);
+    return this.notesService.findAll(userObjId);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard)
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.notesService.update(+id, updateNoteDto);
+  update(
+    @Param('id') id: string,
+    @User('sub') userId: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+  ) {
+    const userObjId = new Types.ObjectId(userId);
+    const objId = new Types.ObjectId(id);
+    return this.notesService.update(objId, userObjId, updateNoteDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  remove(@Param('id') id: string) {
-    return this.notesService.remove(+id);
+  remove(@Param('id') id: string, @User('sub') userId: string) {
+    const userObjId = new Types.ObjectId(userId);
+    const objId = new Types.ObjectId(id);
+    return this.notesService.remove(objId, userObjId);
   }
 }
