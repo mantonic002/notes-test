@@ -14,8 +14,22 @@ export class NotesService {
     return createdNote.save();
   }
 
-  async findAll(userId: Types.ObjectId): Promise<Note[]> {
-    return this.noteModel.find({ userId: userId }).exec();
+  async findAll(
+    userId: Types.ObjectId,
+    page: number,
+    limit: number,
+  ): Promise<{ count: number; notes: Note[] }> {
+    const skip = (page - 1) * limit;
+
+    const count = await this.noteModel.countDocuments({ userId }).exec();
+
+    const notes = await this.noteModel
+      .find({ userId })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return { count, notes };
   }
 
   async update(

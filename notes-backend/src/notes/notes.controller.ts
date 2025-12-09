@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -28,9 +29,13 @@ export class NotesController {
 
   @Get()
   @UseGuards(AuthGuard)
-  findAll(@User('sub') userId: string) {
+  findAll(
+    @User('sub') userId: string,
+    @Query('page') page: number,
+    @Query('size') size: number,
+  ) {
     const userObjId = new Types.ObjectId(userId);
-    return this.notesService.findAll(userObjId);
+    return this.notesService.findAll(userObjId, page || 1, size || 10);
   }
 
   @Put(':id')
