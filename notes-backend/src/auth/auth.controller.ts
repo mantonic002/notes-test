@@ -1,5 +1,7 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { SignUpDto } from 'src/users/dto/sign-up.dto';
+import { SignInDto } from 'src/users/dto/sign-in.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -7,15 +9,13 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  //TODO: replace Reciord<string, any> with actual DTO class
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  signIn(@Body() signIn: SignInDto) {
+    return this.authService.signIn(signIn);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
-  //TODO: replace Reciord<string, any> with actual DTO class
-  signUp(@Body() signUpDto: Record<string, any>) {
-    return this.authService.signUp(signUpDto.username, signUpDto.password);
+  signUp(@Body() signUp: SignUpDto) {
+    return this.authService.signUp(signUp);
   }
 }

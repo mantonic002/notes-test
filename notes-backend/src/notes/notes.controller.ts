@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -15,6 +16,7 @@ import { UpdateNoteDto } from './dto/update-note.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/decorators/user.decorator';
 import { Types } from 'mongoose';
+import { ObjectIdPipe } from 'src/pipes/object-id.pipe';
 
 @Controller('notes')
 export class NotesController {
@@ -22,39 +24,40 @@ export class NotesController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@User('sub') userId: string, @Body() createNoteDto: CreateNoteDto) {
-    createNoteDto.userId = new Types.ObjectId(userId);
-    return this.notesService.create(createNoteDto);
+  create(
+    @User('sub', ObjectIdPipe) userId: Types.ObjectId,
+    @Body() createNote: CreateNoteDto,
+  ) {
+    createNote.userId = userId;
+    return this.notesService.create(createNote);
   }
 
   @Get()
   @UseGuards(AuthGuard)
   findAll(
-    @User('sub') userId: string,
-    @Query('page') page: number,
-    @Query('size') size: number,
+    @User('sub', ObjectIdPipe) userId: Types.ObjectId,
+    @Query('page', new ParseIntPipe({ optional: true })) page = 1,
+    @Query('size', new ParseIntPipe({ optional: true })) size = 10,
   ) {
-    const userObjId = new Types.ObjectId(userId);
-    return this.notesService.findAll(userObjId, page || 1, size || 10);
+    return this.notesService.findAll(userId, page, size);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard)
   update(
-    @Param('id') id: string,
-    @User('sub') userId: string,
-    @Body() updateNoteDto: UpdateNoteDto,
+    @Param('id', ObjectIdPipe) id: Types.ObjectId,
+    @User('sub', ObjectIdPipe) userId: Types.ObjectId,
+    @Body() updateNote: UpdateNoteDto,
   ) {
-    const userObjId = new Types.ObjectId(userId);
-    const objId = new Types.ObjectId(id);
-    return this.notesService.update(objId, userObjId, updateNoteDto);
+    return this.notesService.update(id, userId, updateNote);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  remove(@Param('id') id: string, @User('sub') userId: string) {
-    const userObjId = new Types.ObjectId(userId);
-    const objId = new Types.ObjectId(id);
-    return this.notesService.remove(objId, userObjId);
+  remove(
+    @Param('id', ObjectIdPipe) id: Types.ObjectId,
+    @User('sub', ObjectIdPipe) userId: Types.ObjectId,
+  ) {
+    return this.notesService.remove(id, userId);
   }
 }

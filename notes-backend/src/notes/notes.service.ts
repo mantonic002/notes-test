@@ -9,9 +9,8 @@ import { Note } from './schemas/notes.schema';
 export class NotesService {
   constructor(@InjectModel(Note.name) private noteModel: Model<Note>) {}
 
-  async create(createNoteDto: CreateNoteDto): Promise<Note> {
-    const createdNote = new this.noteModel(createNoteDto);
-    return createdNote.save();
+  async create(createNote: CreateNoteDto): Promise<Note> {
+    return this.noteModel.create(createNote);
   }
 
   async findAll(
@@ -35,10 +34,10 @@ export class NotesService {
   async update(
     id: Types.ObjectId,
     userId: Types.ObjectId,
-    updateNoteDto: UpdateNoteDto,
+    updateNote: UpdateNoteDto,
   ): Promise<Note> {
     const result = await this.noteModel
-      .findOneAndUpdate({ _id: id, userId }, updateNoteDto, { new: true })
+      .findOneAndUpdate({ _id: id, userId }, updateNote, { new: true })
       .exec();
 
     if (!result) {
