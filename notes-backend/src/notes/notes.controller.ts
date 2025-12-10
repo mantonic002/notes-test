@@ -17,6 +17,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/decorators/user.decorator';
 import { Types } from 'mongoose';
 import { ObjectIdPipe } from 'src/pipes/object-id.pipe';
+import { SortDirectionPipe } from 'src/pipes/sort-direction.pipe';
 
 @Controller('notes')
 export class NotesController {
@@ -38,8 +39,9 @@ export class NotesController {
     @User('sub', ObjectIdPipe) userId: Types.ObjectId,
     @Query('page', new ParseIntPipe({ optional: true })) page = 1,
     @Query('size', new ParseIntPipe({ optional: true })) size = 10,
+    @Query('sort', SortDirectionPipe) sort: 1 | -1 = -1, // -1(default) newest to oldest, 1 oldest to newest
   ) {
-    return this.notesService.findAll(userId, page, size);
+    return this.notesService.findAll(userId, page, size, sort);
   }
 
   @Put(':id')

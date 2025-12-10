@@ -5,7 +5,4 @@ export class UpdateNoteDto {
   @IsOptional()
   note?: string;
 
-  @IsNotEmpty()
-  @IsOptional()
-  group?: string;
 }

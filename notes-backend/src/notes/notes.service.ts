@@ -17,17 +17,21 @@ export class NotesService {
     userId: Types.ObjectId,
     page: number,
     limit: number,
+    sortByDate: -1 | 1, // -1 newest to oldest, 1 oldest to newest
   ): Promise<{ count: number; notes: Note[] }> {
     const skip = (page - 1) * limit;
 
     const count = await this.noteModel.countDocuments({ userId }).exec();
 
-    const notes = await this.noteModel
-      .find({ userId })
-      .skip(skip)
-      .limit(limit)
-      .exec();
+    let notesQuery = this.noteModel.find({ userId });
 
+    if (sortByDate == -1) {
+      notesQuery = notesQuery.sort({ createdAt: sortByDate });
+    }
+
+    notesQuery = notesQuery.skip(skip).limit(limit);
+
+    const notes = await notesQuery.exec();
     return { count, notes };
   }
 

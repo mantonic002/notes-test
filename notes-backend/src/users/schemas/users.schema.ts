@@ -9,10 +9,10 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
   _id: Types.ObjectId;
 
-  @Prop({ unique: [true, 'duplicate username'] })
+  @Prop({ required: true, unique: [true, 'duplicate username'], index: true })
   username: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 }
 
