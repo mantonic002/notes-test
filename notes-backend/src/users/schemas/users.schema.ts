@@ -9,7 +9,7 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
   _id: Types.ObjectId;
 
-  @Prop({ unique: [true, 'Duplicate username'] })
+  @Prop({ unique: [true, 'duplicate username'] })
   username: string;
 
   @Prop()

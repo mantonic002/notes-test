@@ -1,15 +1,14 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { MongoDuplicateFilter } from './filters/mongo-duplicate.filter';
+import { MongoExceptionFilter } from './filters/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new MongoDuplicateFilter(httpAdapter));
+  app.useGlobalFilters(new MongoExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }
