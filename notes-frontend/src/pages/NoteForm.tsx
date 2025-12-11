@@ -12,7 +12,7 @@ import Alert from "react-bootstrap/Alert";
 export default function NoteForm() {
   const { id } = useParams<{ id?: string }>();
   const location = useLocation();
-  const preloadedNote = location.state?.note as Note | undefined; // ← GET PRELOADED NOTE
+  const preloadedNote = location.state?.note as Note | undefined;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isEdit = !!id;
@@ -36,7 +36,6 @@ export default function NoteForm() {
     mutation.mutate({ note: noteText });
   };
 
-  // Optional: if no preload on edit, show error (e.g., direct URL access)
   if (isEdit && !preloadedNote)
     return <Alert variant="danger">Note not found. Go back to list.</Alert>;
 
