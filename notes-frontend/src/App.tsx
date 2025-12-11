@@ -3,6 +3,7 @@ import Root from "./routes/Root";
 import Home from "./routes/Home";
 import Login from "./routes/Login";
 import { Container } from "react-bootstrap";
+import NoteForm from "./routes/NoteForm";
 
 function App() {
   return (
@@ -12,6 +13,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="notes/new" element={<NoteForm />} />
+          <Route path="notes/:id/edit" element={<NoteForm />} />
         </Route>
       </Routes>
     </Container>
