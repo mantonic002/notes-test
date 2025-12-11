@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import NoteForm from "./pages/NoteForm";
+import Home from "./components/pages/Home";
+import Login from "./components/pages/Login";
+import NoteForm from "./components/pages/NoteForm";
 import { useAuth } from "./hooks/useAuth";
-import CustomNavbar from "./pages/components/CustomNavbar";
-import Register from "./pages/Register";
+import CustomNavbar from "./components/common/CustomNavbar";
+import Register from "./components/pages/Register";
 
 const ProtectedLayout = () => {
   const { isAuthenticated } = useAuth();

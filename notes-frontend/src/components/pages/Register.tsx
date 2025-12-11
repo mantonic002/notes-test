@@ -5,17 +5,21 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+import { ClipboardHeart } from "react-bootstrap-icons";
 
-export default function Login() {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isLoggingIn, loginError, isAuthenticated } = useAuth();
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const { register, isRegistering, registerError } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(
+    if (password !== passwordConfirm) return;
+
+    register(
       { username, password },
       {
         onSuccess: () => navigate("/"),
@@ -28,9 +32,13 @@ export default function Login() {
       className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <Card style={{ width: "28rem" }} className="shadow">
+      <Card style={{ width: "32rem" }} className="shadow">
         <Card.Body className="p-5">
-          <h2 className="text-center mb-4">Login</h2>
+          <div className="d-flex flex-row align-items-center gap-2 mb-3">
+            <ClipboardHeart size={50} className="text-warning mb-2" />
+            <h2 className="fw-bold fs-1 text-warning">MyNotes</h2>
+            <h2 className="fs-1 text-muted">Register</h2>
+          </div>
 
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
@@ -56,31 +64,35 @@ export default function Login() {
               />
             </Form.Group>
 
+            <Form.Group className="mb-4">
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Repeat the same password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                required
+              />
+            </Form.Group>
+
             <p>
               {" "}
-              Don't have an account?{" "}
-              <Link to={"/register"}> Register </Link>{" "}
+              Already have an account? <Link to={"register"}> Login </Link>{" "}
             </p>
 
             <Button
-              variant="primary"
+              variant="outline-warning"
               type="submit"
               className="w-100"
-              disabled={isLoggingIn}
+              disabled={isRegistering}
             >
-              {isLoggingIn ? "Logging in..." : "Login"}
+              {isRegistering ? "Registering..." : "Register"}
             </Button>
           </Form>
 
-          {loginError && (
+          {registerError && (
             <Alert variant="danger" className="mt-3">
-              {loginError|| "Invalid credentials"}
-            </Alert>
-          )}
-
-          {isAuthenticated && (
-            <Alert variant="success" className="mt-3">
-              Logged in successfully! Redirecting...
+              {registerError || "Invalid credentials"}
             </Alert>
           )}
         </Card.Body>

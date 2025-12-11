@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../api/api";
-import type { Note } from "../types/note";
+import api from "../../api/api";
+import type { Note } from "../../types/note";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
-import { getErrorMessage } from "../helpers/helpers";
+import { getErrorMessage } from "../../helpers/helpers";
 
 export default function NoteForm() {
   const { id } = useParams<{ id?: string }>();
@@ -41,17 +41,19 @@ export default function NoteForm() {
     return <Alert variant="danger">Note not found. Go back to list.</Alert>;
 
   return (
-    <Container className="py-5">
-      <Card className="max-w-2xl mx-auto shadow">
-        <Card.Body className="p-5">
-          <h2 className="mb-4">{isEdit ? "Edit Note" : "New Note"}</h2>
+    <Container className="mt-4">
+      <Card className="max-w-2xl mx-auto shadow bg-warning-subtle">
+        <Card.Body className="p-4">
+          <h2 className="mb-4 fw-bold text-warning ">
+            {isEdit ? "Edit Note" : "New Note"}
+          </h2>
 
           {mutation.error && (
             <Alert variant="danger">{getErrorMessage(mutation.error)}</Alert>
           )}
 
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-4">
+            <Form.Group className="mb-2">
               <Form.Label>Your note</Form.Label>
               <Form.Control
                 as="textarea"
@@ -59,6 +61,7 @@ export default function NoteForm() {
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
                 placeholder="Write something..."
+                className="bg-warning-subtle border-secondary"
                 required
               />
             </Form.Group>
@@ -66,7 +69,7 @@ export default function NoteForm() {
             <div className="d-flex gap-3">
               <Button
                 type="submit"
-                variant="primary"
+                variant="warning"
                 disabled={mutation.isPending}
               >
                 {mutation.isPending ? "Saving..." : "Save"}

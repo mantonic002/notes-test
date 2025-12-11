@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
-import api from "../api/api";
-import type { Note } from "../types/note";
+import api from "../../api/api";
+import type { Note } from "../../types/note";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
@@ -9,9 +9,15 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
-import { Trash3, Pencil } from "react-bootstrap-icons";
-import CustomPagination from "./components/CustomPagination";
-import { getErrorMessage } from "../helpers/helpers";
+import {
+  Trash3,
+  Pencil,
+  Trash3Fill,
+  PencilFill,
+  PencilSquare,
+} from "react-bootstrap-icons";
+import CustomPagination from "../common/CustomPagination";
+import { getErrorMessage } from "../../helpers/helpers";
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -46,7 +52,7 @@ export default function Home() {
     <Container className="py-5">
       <Link
         to="/notes/new"
-        className="btn btn-primary btn-lg rounded-circle shadow position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center"
+        className="btn btn-warning btn-lg rounded-circle shadow position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center"
         style={{
           width: "60px",
           height: "60px",
@@ -68,13 +74,13 @@ export default function Home() {
           {notes.map((note: Note) => (
             <Col key={note._id}>
               <Card className="h-100 shadow-sm">
-                <Card.Body className="d-flex flex-column">
+                <Card.Body className="d-flex flex-column bg-warning-subtle ">
                   <Card.Text className="flex-grow-1">{note.note}</Card.Text>
                   <small className="text-muted">
-                    {new Date(note.createdAt).toLocaleDateString()}
+                    {new Date(note.createdAt).toLocaleString()}
                   </small>
                 </Card.Body>
-                <Card.Footer className="d-flex justify-content-end gap-2">
+                <Card.Footer className="d-flex justify-content-end gap-2 bg-warning-subtle">
                   <Link
                     to={`/notes/${note._id}/edit`}
                     state={{ note }}
@@ -84,7 +90,7 @@ export default function Home() {
                       height: "40px",
                     }}
                   >
-                    <Pencil />
+                    <PencilFill size={17} className="m-auto" />
                   </Link>
                   <Button
                     variant="outline-danger"
@@ -96,7 +102,7 @@ export default function Home() {
                       height: "40px",
                     }}
                   >
-                    <Trash3 />
+                    <Trash3Fill size={20} />
                   </Button>
                 </Card.Footer>
               </Card>
