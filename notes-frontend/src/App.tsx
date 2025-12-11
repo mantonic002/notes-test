@@ -1,24 +1,41 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import Root from "./routes/Root";
-import Home from "./routes/Home";
-import Login from "./routes/Login";
-import { Container } from "react-bootstrap";
-import NoteForm from "./routes/NoteForm";
+import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
+import Root from "./pages/Root";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import NoteForm from "./pages/NoteForm";
+import { useAuth } from "./hooks/useAuth";
 
-function App() {
+const ProtectedLayout = () => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return <Outlet />; 
+};
+
+export default function App() {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (isAuthenticated && location.pathname === "/login") {
+    return <Navigate to="/" replace />;
+  }
+
   return (
-    <Container fluid>
-      <Routes>
-        <Route path="/" element={<Root />}>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+
+      <Route element={<ProtectedLayout />}>
+        <Route element={<Root />}>
           <Route index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
           <Route path="notes/new" element={<NoteForm />} />
           <Route path="notes/:id/edit" element={<NoteForm />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
-      </Routes>
-    </Container>
+      </Route>
+    </Routes>
   );
 }
-
-export default App;
