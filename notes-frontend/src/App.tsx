@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import NoteForm from "./pages/NoteForm";
 import { useAuth } from "./hooks/useAuth";
 import CustomNavbar from "./pages/components/CustomNavbar";
+import Register from "./pages/Register";
 
 const ProtectedLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -29,6 +30,7 @@ export default function App() {
       {isAuthenticated && <CustomNavbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register/>} />
 
         <Route element={<ProtectedLayout />}>
           <Route index element={<Home />} />

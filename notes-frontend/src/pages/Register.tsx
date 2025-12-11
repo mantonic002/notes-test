@@ -7,15 +7,18 @@ import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-export default function Login() {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isLoggingIn, loginError, isAuthenticated } = useAuth();
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const { register, isRegistering, registerError } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(
+    if (password !== passwordConfirm) return;
+
+    register(
       { username, password },
       {
         onSuccess: () => navigate("/"),
@@ -30,7 +33,7 @@ export default function Login() {
     >
       <Card style={{ width: "28rem" }} className="shadow">
         <Card.Body className="p-5">
-          <h2 className="text-center mb-4">Login</h2>
+          <h2 className="text-center mb-4">Register</h2>
 
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
@@ -56,31 +59,35 @@ export default function Login() {
               />
             </Form.Group>
 
+            <Form.Group className="mb-4">
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Repeat the same password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                required
+              />
+            </Form.Group>
+
             <p>
               {" "}
-              Don't have an account?{" "}
-              <Link to={"/register"}> Register </Link>{" "}
+              Already have an account? <Link to={"register"}> Login </Link>{" "}
             </p>
 
             <Button
               variant="primary"
               type="submit"
               className="w-100"
-              disabled={isLoggingIn}
+              disabled={isRegistering}
             >
-              {isLoggingIn ? "Logging in..." : "Login"}
+              {isRegistering ? "Registering..." : "Register"}
             </Button>
           </Form>
 
-          {loginError && (
+          {registerError && (
             <Alert variant="danger" className="mt-3">
-              {loginError|| "Invalid credentials"}
-            </Alert>
-          )}
-
-          {isAuthenticated && (
-            <Alert variant="success" className="mt-3">
-              Logged in successfully! Redirecting...
+              {registerError || "Invalid credentials"}
             </Alert>
           )}
         </Card.Body>
