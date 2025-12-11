@@ -9,13 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
-import {
-  Trash3,
-  Pencil,
-  Trash3Fill,
-  PencilFill,
-  PencilSquare,
-} from "react-bootstrap-icons";
+import { Trash3Fill, PencilFill } from "react-bootstrap-icons";
 import CustomPagination from "../common/CustomPagination";
 import { getErrorMessage } from "../../helpers/helpers";
 
@@ -25,12 +19,12 @@ export default function Home() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["notes", searchParams.get("page")],
-    queryFn: () =>
+    queryFn: () => 
       api
         .get("/notes", {
           params: Object.fromEntries(searchParams),
         })
-        .then((res) => res.data),
+                .then((res) => res.data),
   });
 
   const deleteMutation = useMutation({

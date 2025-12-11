@@ -1,5 +1,5 @@
-import { Pagination } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import "../../App.css";
 
 interface Props {
   totalCount: number | null;
@@ -28,59 +28,65 @@ export default function CustomPagination({ totalCount, pageSize = 9 }: Props) {
     setSearchParams(newParams);
   };
 
+  const start = Math.max(1, currentPage - 1);
+  const end = Math.min(totalPages, currentPage + 1);
+
+  const pages: number[] = [];
+  for (let i = start; i <= end; i++) pages.push(i);
+
+  const showFirst = start > 1;
+  const showLast = end < totalPages;
+
   return (
-    <div className="d-flex justify-content-center mt-4">
-      <Pagination>
-        <Pagination.First
-          as="button"
-          onClick={(e) => {
-            e.preventDefault();
-            goToPage(1);
-          }}
-          disabled={currentPage === 1}
-        />
+    <nav className="cp-wrapper" aria-label="Pagination">
+      <button
+        className="cp-btn cp-nav"
+        onClick={() => goToPage(currentPage - 1)}
+        disabled={currentPage === 1}
+        aria-label="Previous page"
+      >
+        ‹ Prev
+      </button>
 
-        <Pagination.Prev
-          as="button"
-          onClick={(e) => {
-            e.preventDefault();
-            goToPage(currentPage - 1);
-          }}
-          disabled={currentPage === 1}
-        />
+      {showFirst && (
+        <>
+          <button className="cp-btn" onClick={() => goToPage(1)}>
+            1
+          </button>
 
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <Pagination.Item
-            key={page}
-            as="button"
-            active={page === currentPage}
-            onClick={(e) => {
-              e.preventDefault();
-              goToPage(page);
-            }}
-          >
-            {page}
-          </Pagination.Item>
-        ))}
+          {start > 2 && <span className="cp-dots">…</span>}
+        </>
+      )}
 
-        <Pagination.Next
-          as="button"
-          onClick={(e) => {
-            e.preventDefault();
-            goToPage(currentPage + 1);
-          }}
-          disabled={currentPage === totalPages}
-        />
+      {pages.map((p) => (
+        <button
+          key={p}
+          className={`cp-btn ${p === currentPage ? "active" : ""}`}
+          onClick={() => goToPage(p)}
+          aria-current={p === currentPage ? "page" : undefined}
+        >
+          {p}
+        </button>
+      ))}
 
-        <Pagination.Last
-          as="button"
-          onClick={(e) => {
-            e.preventDefault();
-            goToPage(totalPages);
-          }}
-          disabled={currentPage === totalPages}
-        />
-      </Pagination>
-    </div>
+      {showLast && (
+        <>
+          {end < totalPages - 1 && <span className="cp-dots">…</span>}
+
+          <button className="cp-btn" onClick={() => goToPage(totalPages)}>
+            {totalPages}
+          </button>
+        </>
+      )}
+
+      <button
+        className="cp-btn cp-nav"
+        onClick={() => goToPage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        aria-label="Next page"
+      >
+        Next ›
+      </button>
+    </nav>
   );
 }
