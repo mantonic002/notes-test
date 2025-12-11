@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
+import { getErrorMessage } from "../helpers/helpers";
 
 export default function NoteForm() {
   const { id } = useParams<{ id?: string }>();
@@ -44,6 +45,10 @@ export default function NoteForm() {
       <Card className="max-w-2xl mx-auto shadow">
         <Card.Body className="p-5">
           <h2 className="mb-4">{isEdit ? "Edit Note" : "New Note"}</h2>
+
+          {mutation.error && (
+            <Alert variant="danger">{getErrorMessage(mutation.error)}</Alert>
+          )}
 
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-4">

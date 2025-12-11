@@ -11,6 +11,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import { Trash3, Pencil } from "react-bootstrap-icons";
 import CustomPagination from "./components/CustomPagination";
+import { getErrorMessage } from "../helpers/helpers";
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -37,7 +38,7 @@ export default function Home() {
         <Spinner animation="border" />
       </div>
     );
-  if (error) return <Alert variant="danger">Failed to load notes</Alert>;
+  if (error) return <Alert variant="danger">{getErrorMessage(error)}</Alert>;
 
   const { notes = [], count = 0 } = data || {};
 
@@ -55,6 +56,11 @@ export default function Home() {
       >
         +
       </Link>
+
+      {deleteMutation.error && (
+        <Alert variant="danger">{getErrorMessage(deleteMutation.error)}</Alert>
+      )}
+
       {notes.length === 0 ? (
         <Alert variant="info">No notes yet. Create your first one!</Alert>
       ) : (
