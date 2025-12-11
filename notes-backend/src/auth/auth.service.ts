@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from 'src/users/dto/sign-in.dto';
 import { SignUpDto } from 'src/users/dto/sign-up.dto';
+import { User } from 'src/users/schemas/users.schema';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(signUp: SignUpDto): Promise<any> {
+  async signUp(signUp: SignUpDto): Promise<User> {
     const saltRounds = 10;
     signUp.password = await bcrypt.hash(signUp.password, saltRounds);
 
@@ -28,7 +29,7 @@ export class AuthService {
 
     const passwordMatches = await bcrypt.compare(
       signIn.password,
-      user.password,
+      user.password!,
     );
 
     if (!passwordMatches) {

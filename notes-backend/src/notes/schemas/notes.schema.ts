@@ -5,6 +5,7 @@ export type NoteDocument = HydratedDocument<Note>;
 
 @Schema({
   timestamps: true,
+  versionKey: false,
 })
 export class Note {
   _id: Types.ObjectId;
