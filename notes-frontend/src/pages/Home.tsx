@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "../api/api";
 import type { Note } from "../types/note";
 import Button from "react-bootstrap/Button";
@@ -10,17 +10,20 @@ import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import { Trash3, Pencil } from "react-bootstrap-icons";
-import { useState } from "react";
+import CustomPagination from "./components/CustomPagination";
 
 export default function Home() {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
-  const pageSize = 9;
+  const [searchParams] = useSearchParams();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["notes", page],
+    queryKey: ["notes", searchParams.get("page")],
     queryFn: () =>
-      api.get(`/notes?page=${page}&size=${pageSize}`).then((res) => res.data),
+      api
+        .get("/notes", {
+          params: Object.fromEntries(searchParams),
+        })
+        .then((res) => res.data),
   });
 
   const deleteMutation = useMutation({
@@ -37,17 +40,21 @@ export default function Home() {
   if (error) return <Alert variant="danger">Failed to load notes</Alert>;
 
   const { notes = [], count = 0 } = data || {};
-  const totalPages = Math.ceil(count / pageSize);
 
   return (
     <Container className="py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>My Notes</h1>
-        <Link to="/notes/new" className="btn btn-success">
-          + New Note
-        </Link>
-      </div>
-
+      <Link
+        to="/notes/new"
+        className="btn btn-primary btn-lg rounded-circle shadow position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center"
+        style={{
+          width: "60px",
+          height: "60px",
+          fontSize: "2rem",
+          zIndex: 1050,
+        }}
+      >
+        +
+      </Link>
       {notes.length === 0 ? (
         <Alert variant="info">No notes yet. Create your first one!</Alert>
       ) : (
@@ -65,7 +72,11 @@ export default function Home() {
                   <Link
                     to={`/notes/${note._id}/edit`}
                     state={{ note }}
-                    className="btn btn-outline-secondary"
+                    className="btn btn-outline-secondary align-items-center justify-content-center"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                    }}
                   >
                     <Pencil />
                   </Link>
@@ -74,6 +85,10 @@ export default function Home() {
                     size="sm"
                     onClick={() => deleteMutation.mutate(note._id)}
                     disabled={deleteMutation.isPending}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                    }}
                   >
                     <Trash3 />
                   </Button>
@@ -84,23 +99,7 @@ export default function Home() {
         </Row>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="d-flex justify-content-center gap-2 mt-5">
-          <Button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
-            Previous
-          </Button>
-          <span className="align-self-center">
-            Page {page} of {totalPages}
-          </span>
-          <Button
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            Next
-          </Button>
-        </div>
-      )}
+      <CustomPagination totalCount={count} />
     </Container>
   );
 }
