@@ -19,12 +19,12 @@ export default function Home() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["notes", searchParams.get("page")],
-    queryFn: () => 
+    queryFn: () =>
       api
         .get("/notes", {
           params: Object.fromEntries(searchParams),
         })
-                .then((res) => res.data),
+        .then((res) => res.data),
   });
 
   const deleteMutation = useMutation({

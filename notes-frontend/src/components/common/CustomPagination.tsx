@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import "../../App.css";
+import { useEffect } from "react";
 
 interface Props {
   totalCount: number | null;
@@ -8,6 +9,17 @@ interface Props {
 
 export default function CustomPagination({ totalCount, pageSize = 9 }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (!searchParams.has("page") || !searchParams.has("size")) {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        if (!newParams.has("page")) newParams.set("page", "1");
+        newParams.set("size", pageSize.toString());
+        return newParams;
+      });
+    }
+  }, [searchParams, setSearchParams, pageSize]);
 
   if (totalCount === null) return null;
 
