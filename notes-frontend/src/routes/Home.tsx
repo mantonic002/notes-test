@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import api from "../api/api";
 
 export default function Home() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["notes"],
-    queryFn: () => fetch("http://localhost:3000/notes").then((r) => r.json()),
+    queryFn: () => api.get("/notes").then((res) => res.data),
   });
 
   if (isLoading) return <div>Loading...</div>;
