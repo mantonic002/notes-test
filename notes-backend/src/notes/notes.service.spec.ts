@@ -99,7 +99,7 @@ describe('NotesService', () => {
       expect(result).toEqual({ count, notes });
     });
 
-    it('should sort oldest first when sortByDate is 1', async () => {
+    it('should not call sort when sortByDate is 1', async () => {
       const countQueryMock = { exec: jest.fn().mockResolvedValue(0) };
       (model.countDocuments as jest.Mock).mockReturnValue(countQueryMock);
 
