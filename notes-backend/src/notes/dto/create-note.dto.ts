@@ -6,5 +6,5 @@ export class CreateNoteDto {
   note: string;
 
   @IsOptional()
-  userId: Types.ObjectId;
+  userId?: Types.ObjectId;
 }
