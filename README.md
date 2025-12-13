@@ -15,7 +15,7 @@ A notes application built with **NestJS** (backend), **React + Vite + TypeScript
 ## Prerequisites
 
 - Docker and Docker Compose (recommended)
-- Or Node.js ≥ 18 (for local development without Docker)
+- Or Node.js ≥ 20 (for local development without Docker)
 
 ## Running with Docker (Recommended)
 
@@ -55,17 +55,19 @@ Navigate to backend directory:
 cd notes-backend
 ```
 
-Make the `.env` file (same as above):
+Make the `.env` file (same as above but with local MongoDB instance):
 ```
 PORT=3000
-DB_CONN_STRING=mongodb://mongo:27017/notes-app
+DB_CONN_STRING=mongodb://localhost:27017/notes-app
 JWT_SECRET=your_very_strong_and_random_secret_key_here
 ```
+#### Make sure MongoDB is running on your machine!!!
 
 Install dependencies and run:
 ```
 npm install
-npm run start:dev
+npm install -g @nestjs/cli
+nest start --env-file .env
 ```
 ### 2. Frontend
 Navigate to frontend directory:
