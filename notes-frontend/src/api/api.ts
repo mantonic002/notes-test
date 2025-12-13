@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: API_URL,
   timeout: 10_000,
 });
 
@@ -18,7 +20,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401 && localStorage.getItem("access_token")) {
+    if (
+      error.response?.status === 401 &&
+      localStorage.getItem("access_token")
+    ) {
       localStorage.removeItem("access_token");
       window.location.href = "/login";
     }
