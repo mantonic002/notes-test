@@ -66,8 +66,7 @@ JWT_SECRET=your_very_strong_and_random_secret_key_here
 Install dependencies and run:
 ```
 npm install
-npm install -g @nestjs/cli
-nest start --env-file .env
+npm run start:dev
 ```
 ### 2. Frontend
 Navigate to frontend directory:
