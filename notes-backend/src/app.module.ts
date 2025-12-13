@@ -7,7 +7,6 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     NotesModule,
-
     MongooseModule.forRoot(process.env.DB_CONN_STRING || ''),
     AuthModule,
     UsersModule,
